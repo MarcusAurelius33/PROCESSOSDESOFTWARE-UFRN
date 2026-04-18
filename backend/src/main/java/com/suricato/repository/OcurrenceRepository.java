@@ -1,7 +1,7 @@
 package com.suricato.repository;
 
-import com.suricato.model.entity.Ocurrence;
-import com.suricato.model.entity.OcurrenceStatus;
+import com.suricato.entity.Ocurrence;
+import com.suricato.entity.OcurrenceStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

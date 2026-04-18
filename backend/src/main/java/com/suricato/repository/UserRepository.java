@@ -1,6 +1,6 @@
 package com.suricato.repository;
 
-import com.suricato.model.entity.User;
+import com.suricato.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

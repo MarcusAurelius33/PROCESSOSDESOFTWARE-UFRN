@@ -1,4 +1,4 @@
-package com.suricato.model.entity;
+package com.suricato.entity;
 
 public enum UserRole {
     CITIZEN,

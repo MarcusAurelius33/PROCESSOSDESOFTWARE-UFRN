@@ -1,4 +1,4 @@
-package com.suricato.model.entity;
+package com.suricato.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

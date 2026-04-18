@@ -1,6 +1,6 @@
 package com.suricato.repository;
 
-import com.suricato.model.entity.StatusHistory;
+import com.suricato.entity.StatusHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
