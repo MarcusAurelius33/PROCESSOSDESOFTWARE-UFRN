@@ -8,16 +8,24 @@
 
 ## Dependências principais
 
-| Dependência | Versão |
-|---|---|
-| Spring Boot | 3.3.5 |
-| Spring Web | — |
-| Spring Data JPA | — |
-| Spring Validation | — |
-| PostgreSQL Driver | — |
-| Lombok | — |
+| Dependência       | Versão |
+| ----------------- | ------ |
+| Spring Boot       | 3.3.5  |
+| Spring Web        | —      |
+| Spring Data JPA   | —      |
+| Spring Validation | —      |
+| PostgreSQL Driver | —      |
+| Lombok            | —      |
+| Flyway            | —      |
 
 ## Configuração do banco
+
+```bash
+cd backend
+docker compose up -d
+```
+
+ou
 
 ```sql
 CREATE DATABASE suricato_db;
@@ -36,6 +44,13 @@ password: postgres
 ```bash
 cd backend
 mvn spring-boot:run
+```
+
+ou, se não tiver o maven instalado:
+
+```bash
+cd backend
+./mvnw spring-boot:run
 ```
 
 A API ficará disponível em `http://localhost:8080`.
