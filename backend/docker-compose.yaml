@@ -1,0 +1,15 @@
+services:
+  postgres-suricato-db:
+    image: postgres:17
+    container_name: suricato_db
+    environment:
+      POSTGRES_DB: suricato_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - suricato-data:/var/lib/postgresql/data
+
+volumes:
+  suricato-data:
