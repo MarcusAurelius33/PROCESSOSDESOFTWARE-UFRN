@@ -5,6 +5,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.suricato.enums.OcurrenceStatusEnum;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -34,7 +36,7 @@ public class Ocurrence {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private OcurrenceStatus status;
+    private OcurrenceStatusEnum status;
 
     @Column(name = "total_confirmation")
     private Long totalConfirmation = 0L;

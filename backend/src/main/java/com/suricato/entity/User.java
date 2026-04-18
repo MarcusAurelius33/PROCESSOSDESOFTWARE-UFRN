@@ -1,5 +1,7 @@
 package com.suricato.entity;
 
+import com.suricato.enums.UserRoleEnum;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,7 +28,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserRole role;
+    private UserRoleEnum role;
 
     @Column(nullable = false)
     private boolean active;

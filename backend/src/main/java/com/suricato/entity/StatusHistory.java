@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.suricato.enums.OcurrenceStatusEnum;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,11 +19,11 @@ public class StatusHistory {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "current_status", nullable = false)
-    private OcurrenceStatus currentStatus;
+    private OcurrenceStatusEnum currentStatus;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "prev_status")
-    private OcurrenceStatus prevStatus;
+    private OcurrenceStatusEnum prevStatus;
 
     @CreationTimestamp
     @Column(name = "updated_at", updatable = false)
