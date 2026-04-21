@@ -1,11 +1,12 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { MapComponent } from "@/components/Map/MapComponent";
 
 export default function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        {/* rotas serão adicionadas aqui */}
-      </Routes>
-    </BrowserRouter>
-  )
+	return (
+		<BrowserRouter>
+			<Routes>
+				<Route path="/" element={<MapComponent />} />
+			</Routes>
+		</BrowserRouter>
+	);
 }
