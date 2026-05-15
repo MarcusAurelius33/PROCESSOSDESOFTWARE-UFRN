@@ -6,6 +6,7 @@ import Property from "./property.svg";
 import Sanitation from "./sanitation.svg";
 import Vegetation from "./vegetation.svg";
 import Warning from "./warning.svg";
+import UserPin from "./userPin.svg";
 
 export {
 	Animal,
@@ -16,4 +17,5 @@ export {
 	Sanitation,
 	Vegetation,
 	Warning,
+	UserPin,
 };
