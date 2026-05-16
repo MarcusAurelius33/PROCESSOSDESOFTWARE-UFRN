@@ -1,10 +1,10 @@
-# suricato-api
+# Suricato API
 
 ## Pré-requisitos
 
 - Java 21
 - Maven 3.9+
-- PostgreSQL 15+
+- Docker e Docker Compose
 
 ## Dependências principais
 
@@ -18,18 +18,43 @@
 | Lombok            | —      |
 | Flyway            | —      |
 
-## Configuração do banco
+## Como executar
+
+### Com Docker
+
+Estando na raiz do repositório onde o `docker-compose.yml` está localizado, execute:
+
+```bash
+docker compose up -d postgres-suricato-db suricato-backend-app
+```
+
+A API ficará disponível em `http://localhost:8080`.
+
+### Sem Docker (desenvolvimento local)
+
+Suba apenas o banco via Docker:
+
+```bash
+docker compose up -d postgres-suricato-db
+```
+
+Em seguida, execute o backend:
 
 ```bash
 cd backend
-docker compose up -d
+mvn spring-boot:run
 ```
 
-ou
+ou, se não tiver o Maven instalado:
 
-```sql
-CREATE DATABASE suricato_db;
+```bash
+cd backend
+./mvnw spring-boot:run
 ```
+
+A API ficará disponível em `http://localhost:8080`.
+
+## Configuração do banco
 
 As credenciais padrão estão em `src/main/resources/application.properties`:
 
@@ -38,19 +63,3 @@ url: jdbc:postgresql://localhost:5432/suricato_db
 username: postgres
 password: postgres
 ```
-
-## Como executar
-
-```bash
-cd backend
-mvn spring-boot:run
-```
-
-ou, se não tiver o maven instalado:
-
-```bash
-cd backend
-./mvnw spring-boot:run
-```
-
-A API ficará disponível em `http://localhost:8080`.
