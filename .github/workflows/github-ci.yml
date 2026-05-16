@@ -19,11 +19,17 @@ jobs:
   frontend-build-and-test:
     name: Frontend - Build and Test
     runs-on: ubuntu-latest
+    # Só executa se houver mudanças no frontend
+    # if: |
+    #  contains(join(github.event.commits.*.modified, ' '), 'frontend/') ||
+    #  contains(join(github.event.commits.*.added, ' '), 'frontend/')
 
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Configura o Node.js 20 com cache do npm
       - name: Set up Node.js 20
         uses: actions/setup-node@v4
         with:
@@ -31,10 +37,12 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'frontend/package-lock.json'
 
+      # Instala as dependências do frontend
       - name: Install dependencies
         run: npm install
         working-directory: ./frontend
 
+      # Faz o build do frontend
       - name: Build front-end
         run: npm run build
         working-directory: ./frontend
@@ -43,8 +51,9 @@ jobs:
     name: Frontend - Build and Push Docker Image
     runs-on: ubuntu-latest
     needs: frontend-build-and-test
+
     # Só executa no push para main (não em pull request)
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code
@@ -53,9 +62,10 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # Faz o build e push da imagem do frontend
       - name: Build and push frontend image
         uses: docker/build-push-action@v5
         with:
@@ -65,13 +75,18 @@ jobs:
             kketillen/suricato-web:1.0.0
             kketillen/suricato-web:latest
 
+
   backend-build-and-test:
     name: Backend - Build and Test
     runs-on: ubuntu-latest
+    # Só executa se houver mudanças no backend
+    # if: |
+    #  contains(join(github.event.commits.*.modified, ' '), 'backend/') ||
+    #  contains(join(github.event.commits.*.added, ' '), 'backend/')
 
     services:
       postgres:
-        image: postgres:17
+        image: postgres:15
         env:
           POSTGRES_DB: suricato_db
           POSTGRES_USER: postgres
@@ -85,9 +100,11 @@ jobs:
           --health-retries 5
 
     steps:
+  
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Configura o Java 21 com cache do Maven
       - name: Set up Java 21 and Maven
         uses: actions/setup-java@v4
         with:
@@ -95,10 +112,12 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
+      # Instala as dependências e compila o projeto
       - name: Install dependencies and compile
         run: mvn clean install -DskipTests
         working-directory: ./backend
 
+      # Executa os testes do backend
       - name: Run backend tests
         run: mvn test
         working-directory: ./backend
@@ -111,19 +130,23 @@ jobs:
     name: Backend - Build and Push Docker Image
     runs-on: ubuntu-latest
     needs: backend-build-and-test
+
     # Só executa no push para main (não em pull request)
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
+    
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Loga no Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # Faz o build e push da imagem do backend
       - name: Build and push backend image
         uses: docker/build-push-action@v5
         with:
