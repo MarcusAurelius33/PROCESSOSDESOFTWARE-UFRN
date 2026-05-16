@@ -1,0 +1,41 @@
+services:
+  postgres-suricato-db:
+    image: postgres:17
+    container_name: suricato_db
+    environment:
+      POSTGRES_DB: suricato_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - suricato-data:/var/lib/postgresql/data
+    networks:
+      - suricato-network
+
+  suricato-backend-app:
+    image: kketillen/suricato-backend:1.0.0
+    container_name: suricato_api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-suricato-db
+    networks:
+      - suricato-network
+
+  suricato-frontend-app:
+    image: kketillen/suricato-web:1.0.0
+    container_name: suricato-web
+    ports:
+      - "5173:80"
+    depends_on:
+      - suricato-backend-app
+    networks:
+      - suricato-network
+
+volumes:
+  suricato-data:
+
+networks:
+  suricato-network:
+    driver: bridge
