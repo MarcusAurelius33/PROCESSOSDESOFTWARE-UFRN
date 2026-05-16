@@ -1,6 +1,6 @@
 name: CI/CD Suricato
-
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
