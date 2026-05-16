@@ -20,9 +20,9 @@ jobs:
     name: Frontend - Build and Test
     runs-on: ubuntu-latest
     # Só executa se houver mudanças no frontend
-    if: |
-      contains(join(github.event.commits.*.modified, ' '), 'frontend/') ||
-      contains(join(github.event.commits.*.added, ' '), 'frontend/')
+    # if: |
+    #  contains(join(github.event.commits.*.modified, ' '), 'frontend/') ||
+    #  contains(join(github.event.commits.*.added, ' '), 'frontend/')
 
     steps:
 
@@ -53,7 +53,7 @@ jobs:
     needs: frontend-build-and-test
 
     # Só executa no push para main (não em pull request)
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code
@@ -80,9 +80,9 @@ jobs:
     name: Backend - Build and Test
     runs-on: ubuntu-latest
     # Só executa se houver mudanças no backend
-    if: |
-      contains(join(github.event.commits.*.modified, ' '), 'backend/') ||
-      contains(join(github.event.commits.*.added, ' '), 'backend/')
+    #if: |
+    #  contains(join(github.event.commits.*.modified, ' '), 'backend/') ||
+    #  contains(join(github.event.commits.*.added, ' '), 'backend/')
 
     services:
       postgres:
@@ -132,7 +132,7 @@ jobs:
     needs: backend-build-and-test
 
     # Só executa no push para main (não em pull request)
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
     
