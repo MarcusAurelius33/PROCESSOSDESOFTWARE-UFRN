@@ -80,7 +80,7 @@ jobs:
     name: Backend - Build and Test
     runs-on: ubuntu-latest
     # Só executa se houver mudanças no backend
-    #if: |
+    # if: |
     #  contains(join(github.event.commits.*.modified, ' '), 'backend/') ||
     #  contains(join(github.event.commits.*.added, ' '), 'backend/')
 
