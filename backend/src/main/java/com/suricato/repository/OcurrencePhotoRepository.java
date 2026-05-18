@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface OcurrencePhotoRepository extends JpaRepository<OcurrencePhoto, Long> {
     Optional<OcurrencePhoto> findFirstByOcurrenceIdOrderByCreatedAtAsc(Long ocurrenceId);
+    
 }

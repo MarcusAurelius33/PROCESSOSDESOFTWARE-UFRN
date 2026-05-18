@@ -1,6 +1,5 @@
 package com.suricato.service;
 
-import com.suricato.entity.Category;
 import com.suricato.model.dto.response.CategoryResponseDTO;
 import com.suricato.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,15 +16,14 @@ public class CategoryService {
     public List<CategoryResponseDTO> findActiveCategories() {
         return categoryRepository.findByActiveTrue()
             .stream()
-            .map(this::toResponse)
+            .map(CategoryResponseDTO::fromEntity)
             .toList();
     }
 
-    private CategoryResponseDTO toResponse(Category category) {
-        return new CategoryResponseDTO(
-            category.getId(),
-            category.getName(),
-            category.getDescription()
-        );
-    }
+    public List<CategoryResponseDTO> findAllActive() {
+    return categoryRepository.findByActiveTrue()
+            .stream()
+            .map(CategoryResponseDTO::fromEntity) 
+            .toList();
+    }  
 }

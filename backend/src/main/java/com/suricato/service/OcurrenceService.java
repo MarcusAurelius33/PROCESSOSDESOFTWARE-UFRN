@@ -15,7 +15,6 @@ import com.suricato.model.dto.response.CityResponseDTO;
 import com.suricato.model.dto.response.OcurrenceResponseDTO;
 import com.suricato.repository.CategoryRepository;
 import com.suricato.repository.CityRepository;
-import com.suricato.repository.OcurrencePhotoRepository;
 import com.suricato.repository.OcurrenceRepository;
 import com.suricato.repository.StatusHistoryRepository;
 import com.suricato.repository.UserRepository;
@@ -32,7 +31,6 @@ public class OcurrenceService {
     private static final String SEED_USER_EMAIL = "cidadao.seed@suricato.local";
 
     private final OcurrenceRepository ocurrenceRepository;
-    private final OcurrencePhotoRepository ocurrencePhotoRepository;
     private final StatusHistoryRepository statusHistoryRepository;
     private final CategoryRepository categoryRepository;
     private final CityRepository cityRepository;
@@ -42,7 +40,7 @@ public class OcurrenceService {
     public List<OcurrenceResponseDTO> findAll() {
         return ocurrenceRepository.findAll()
             .stream()
-            .map(this::toResponse)
+            .map(OcurrenceResponseDTO::fromEntity)
             .toList();
     }
 
@@ -74,60 +72,39 @@ public class OcurrenceService {
             .city(city)
             .build();
 
-        Ocurrence savedOcurrence = ocurrenceRepository.save(ocurrence);
-
         if (hasText(request.photoUrl())) {
-            ocurrencePhotoRepository.save(OcurrencePhoto.builder()
+            OcurrencePhoto photo = OcurrencePhoto.builder()
                 .url(request.photoUrl())
-                .ocurrence(savedOcurrence)
-                .build());
-        }
+                .ocurrence(ocurrence)
+                .build();
+            ocurrence.getPhotos().add(photo);
+        }    
 
+        Ocurrence savedOcurrence = ocurrenceRepository.save(ocurrence);
+        
         statusHistoryRepository.save(StatusHistory.builder()
             .currentStatus(OcurrenceStatusEnum.OPEN)
             .prevStatus(null)
             .ocurrence(savedOcurrence)
             .build());
 
-        return toResponse(savedOcurrence);
+        return OcurrenceResponseDTO.fromEntity(savedOcurrence);
+    }
+    
+   public List<CategoryResponseDTO> findAllActive() {
+    return categoryRepository.findByActiveTrue()
+            .stream()
+            .map(CategoryResponseDTO::fromEntity) 
+            .toList();
     }
 
-    private OcurrenceResponseDTO toResponse(Ocurrence ocurrence) {
-        String photoUrl = ocurrencePhotoRepository
-            .findFirstByOcurrenceIdOrderByCreatedAtAsc(ocurrence.getId())
-            .map(OcurrencePhoto::getUrl)
-            .orElse(null);
-
-        return new OcurrenceResponseDTO(
-            ocurrence.getId(),
-            ocurrence.getTitle(),
-            ocurrence.getDescription(),
-            ocurrence.getAddress(),
-            ocurrence.getLatitude(),
-            ocurrence.getLongitude(),
-            ocurrence.getStatus().name(),
-            toCategoryResponse(ocurrence.getCategory()),
-            toCityResponse(ocurrence.getCity()),
-            photoUrl,
-            ocurrence.getCreatedAt()
-        );
+    public List<CityResponseDTO> findCity() {
+        return cityRepository.findAll()
+            .stream()
+            .map(CityResponseDTO::fromEntity)
+            .toList();
     }
-
-    private CategoryResponseDTO toCategoryResponse(Category category) {
-        return new CategoryResponseDTO(
-            category.getId(),
-            category.getName(),
-            category.getDescription()
-        );
-    }
-
-    private CityResponseDTO toCityResponse(City city) {
-        return new CityResponseDTO(
-            city.getId(),
-            city.getName(),
-            city.getState()
-        );
-    }
+    
 
     private boolean hasText(String value) {
         return value != null && !value.isBlank();

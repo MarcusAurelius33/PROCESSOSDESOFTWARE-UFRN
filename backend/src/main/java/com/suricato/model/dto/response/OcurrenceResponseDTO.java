@@ -3,6 +3,8 @@ package com.suricato.model.dto.response;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.suricato.entity.Ocurrence;
+
 public record OcurrenceResponseDTO(
     Long id,
     String title,
@@ -16,4 +18,27 @@ public record OcurrenceResponseDTO(
     String photoUrl,
     LocalDateTime createdAt
 ) {
+    public static OcurrenceResponseDTO fromEntity(Ocurrence ocurrence) {
+        if (ocurrence == null) {
+            return null;
+        }
+        
+        String photoUrl = (ocurrence.getPhotos() != null && !ocurrence.getPhotos().isEmpty())
+            ? ocurrence.getPhotos().get(0).getUrl()
+            : null;
+
+        return new OcurrenceResponseDTO(
+            ocurrence.getId(),
+            ocurrence.getTitle(),
+            ocurrence.getDescription(),
+            ocurrence.getAddress(),
+            ocurrence.getLatitude(),
+            ocurrence.getLongitude(),
+            ocurrence.getStatus().name(),
+            CategoryResponseDTO.fromEntity(ocurrence.getCategory()),
+            CityResponseDTO.fromEntity(ocurrence.getCity()),
+            photoUrl,
+            ocurrence.getCreatedAt()
+        );
+    }
 }
