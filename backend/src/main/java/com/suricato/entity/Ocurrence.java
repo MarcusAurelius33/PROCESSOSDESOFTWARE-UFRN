@@ -9,6 +9,8 @@ import com.suricato.enums.OcurrenceStatusEnum;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "ocurrence")
@@ -38,6 +40,7 @@ public class Ocurrence {
     @Column(nullable = false)
     private OcurrenceStatusEnum status;
 
+    @Builder.Default
     @Column(name = "total_confirmation")
     private Long totalConfirmation = 0L;
 
@@ -60,4 +63,8 @@ public class Ocurrence {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id", nullable = false)
     private City city;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "ocurrence", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OcurrencePhoto> photos = new ArrayList<>();
 }
