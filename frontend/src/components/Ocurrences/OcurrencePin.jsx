@@ -10,6 +10,7 @@ import {
 	Vegetation,
 	Warning,
 } from "@/assets/markers";
+import { OcurrrenceDetail } from "./OcurrenceDetail";
 
 const iconDictionary = {
 	animal: Animal,
@@ -34,16 +35,18 @@ function createIcon(category) {
 
 export function OcurrencePin({ ocurrence }) {
 	return (
-		<Marker
-			position={[ocurrence.latitude, ocurrence.longitude]}
-			icon={createIcon(ocurrence.category.name)}
-		>
-			<Popup>
-				<h1>
-					<strong>{ocurrence.title}</strong>
-				</h1>
-				<p>{ocurrence.description}</p>
-			</Popup>
-		</Marker>
+		<>
+			<Marker
+				position={[ocurrence.latitude, ocurrence.longitude]}
+				icon={createIcon(ocurrence.category.name)}
+				eventHandlers={{
+					click: () =>
+						document
+							.getElementById(`ocurrence-modal-${ocurrence.id}`)
+							.showModal(),
+				}}
+			/>
+			<OcurrrenceDetail ocurrence={ocurrence} />
+		</>
 	);
 }
