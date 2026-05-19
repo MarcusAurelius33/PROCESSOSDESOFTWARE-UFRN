@@ -111,7 +111,7 @@ export const OcurrrenceDetail = ({ ocurrence }) => {
 								Apoios:
 								<br />
 							</span>
-							{ocurrence.totalConfirmation} usuáriostambém viram isso!
+							{ocurrence.totalConfirmation} usuários também viram isso!
 						</p>
 					</div>
 
