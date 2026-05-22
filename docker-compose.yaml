@@ -16,6 +16,10 @@ services:
   suricato-backend-app:
     image: kketillen/suricato-backend:1.0.0
     container_name: suricato_api
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-suricato-db:5432/suricato_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
     ports:
       - "8080:8080"
     depends_on:
