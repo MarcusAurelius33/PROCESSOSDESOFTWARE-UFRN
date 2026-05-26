@@ -1,6 +1,7 @@
 import {
 	ChartPieIcon,
 	LogOutIcon,
+	MapIcon,
 	MenuIcon,
 	MessageSquareWarningIcon,
 	PlusCircleIcon,
@@ -39,6 +40,15 @@ export const MenuComponent = () => {
 						<li>
 							<Link
 								to="/"
+								className="delay-200 hover:bg-gray-200 rounded-sm p-4 focus-visible:bg-gray-200 focus-visible:text-gray-800"
+							>
+								<MapIcon className="text-gray-800" size={18} />
+								Mapa
+							</Link>
+						</li>
+						<li>
+							<Link
+								to="/ocurrence/new"
 								className="delay-200 hover:bg-gray-200 rounded-sm p-4 focus-visible:bg-gray-200 focus-visible:text-gray-800"
 							>
 								<PlusCircleIcon className="text-gray-800" size={18} />
