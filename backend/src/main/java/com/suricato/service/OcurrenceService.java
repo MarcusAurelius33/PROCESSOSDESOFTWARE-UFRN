@@ -46,8 +46,8 @@ public class OcurrenceService {
 
     @Transactional
     public OcurrenceResponseDTO create(OcurrenceRequestDTO request) {
-        Category category = categoryRepository.findById(request.categoryId())
-            .orElseThrow(() -> new ResourceNotFoundException("Categoria nao encontrada."));
+			Category category = categoryRepository.findByIdAndActiveTrue(request.categoryId())
+					.orElseThrow(() -> new ResourceNotFoundException("Categoria nao encontrada."));
 
         if (!category.isActive()) {
             throw new BusinessRuleException("Categoria inativa.");
