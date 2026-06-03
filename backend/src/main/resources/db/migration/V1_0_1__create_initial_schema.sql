@@ -2,6 +2,7 @@ CREATE TABLE city (
     id SERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
     state VARCHAR(50) NOT NULL,
+    country VARCHAR(50) NOT NULL,
     latitude DECIMAL(10,7),
     longitude DECIMAL(10,7)
 );
@@ -63,8 +64,8 @@ CREATE TABLE status_history (
     ocurrence_id INT NOT NULL REFERENCES ocurrence(id) ON DELETE CASCADE
 );
 
-INSERT INTO city (name, state, latitude, longitude)
-VALUES ('Natal', 'RN', -5.7944800, -35.2110000);
+INSERT INTO city (name, state, country, latitude, longitude)
+VALUES ('Natal', 'Rio Grande do Norte', 'Brasil', -5.7944800, -35.2110000);
 
 INSERT INTO category (name, description, active) VALUES
 ('Buraco na Via', 'Buracos, crateras ou afundamentos no asfalto.', true),
