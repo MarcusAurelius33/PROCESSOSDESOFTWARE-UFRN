@@ -2,6 +2,7 @@ import { MapContainer, Marker, TileLayer, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { OcurrencePin } from "@/components/Ocurrences/OcurrencePin";
 import { UserLocationMarker } from "./UserLocationMarker";
+import { OcurrenceRegistration } from "../Ocurrences/OcurrenceRegistration";
 
 const mockOcurrences = [
 	{
@@ -100,6 +101,8 @@ export const MapComponent = () => {
 				{mockOcurrences.map((ocurrence) => (
 					<OcurrencePin key={ocurrence.id} ocurrence={ocurrence} />
 				))}
+
+				<OcurrenceRegistration />
 
 				<TileLayer
 					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
