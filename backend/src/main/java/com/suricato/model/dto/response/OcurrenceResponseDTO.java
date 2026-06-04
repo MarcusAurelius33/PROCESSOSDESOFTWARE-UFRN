@@ -15,6 +15,7 @@ public record OcurrenceResponseDTO(
     String status,
     CategoryResponseDTO category,
     CityResponseDTO city,
+    String author,
     String photoUrl,
     LocalDateTime createdAt
 ) {
@@ -37,6 +38,7 @@ public record OcurrenceResponseDTO(
             ocurrence.getStatus().name(),
             CategoryResponseDTO.fromEntity(ocurrence.getCategory()),
             CityResponseDTO.fromEntity(ocurrence.getCity()),
+            ocurrence.getUser().getName(),
             photoUrl,
             ocurrence.getCreatedAt()
         );
