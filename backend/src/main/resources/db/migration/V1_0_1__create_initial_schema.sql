@@ -10,6 +10,7 @@ CREATE TABLE city (
 CREATE TABLE category (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
+    icon VARCHAR(255) NOT NULL,
     description TEXT,
     active BOOLEAN DEFAULT TRUE
 );
@@ -67,11 +68,15 @@ CREATE TABLE status_history (
 INSERT INTO city (name, state, country, latitude, longitude)
 VALUES ('Natal', 'Rio Grande do Norte', 'Brasil', -5.7944800, -35.2110000);
 
-INSERT INTO category (name, description, active) VALUES
-('Buraco na Via', 'Buracos, crateras ou afundamentos no asfalto.', true),
-('Iluminacao Publica', 'Postes apagados, lampadas queimadas ou piscando.', true),
-('Lixo Acumulado', 'Descarte irregular de lixo ou entulho em vias publicas.', true),
-('Foco de Dengue', 'Locais com agua parada propicios para a proliferacao do mosquito.', true);
+INSERT INTO category (name, icon, description, active) VALUES
+('Buraco na Via', 'pothole', 'Buracos, crateras ou afundamentos no asfalto.', true),
+('Iluminacao Publica','lightning', 'Postes apagados, lampadas queimadas ou piscando.', true),
+('Lixo Acumulado', 'garbage', 'Descarte irregular de lixo ou entulho em vias publicas.', true),
+('Patrimônio público', 'property', 'Equipamento público danificado (banco, playground, academia ao ar livre), muro ou estrutura com risco de desabamento.', true),
+('Saneamento', 'sanitation', 'Vazamento de água na via, bueiro entupido ou transbordando, esgoto a céu aberto.', true),
+('Áreas verdes e praças:', 'vegetation', 'Vegetação obstruindo via ou calçada, árvore caída ou com risco de queda, praça ou parque em estado de abandono.', true),
+('Foco de Dengue', 'animal', 'Locais com agua parada propicios para a proliferacao do mosquito.', true),
+('Animais', 'animal', 'Animais soltos ou em situação de risco na via pública.', true);
 
 INSERT INTO users (name, email, password, phone, role, active, city_id)
 VALUES (

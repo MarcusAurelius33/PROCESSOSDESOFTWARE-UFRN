@@ -76,7 +76,7 @@ export const OcurrenceRegistration = ({
 			photo: null,
 		});
 
-		document.getElementById(`ocurrence-modal-registration`).closeModal();
+		document.getElementById(`ocurrence-modal-registration`).close();
 	};
 
 	function handleFormChange(field, value) {

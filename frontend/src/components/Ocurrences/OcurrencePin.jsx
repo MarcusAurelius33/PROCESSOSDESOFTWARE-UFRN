@@ -38,7 +38,7 @@ export function OcurrencePin({ ocurrence }) {
 		<>
 			<Marker
 				position={[ocurrence.latitude, ocurrence.longitude]}
-				icon={createIcon(ocurrence.category.name)}
+				icon={createIcon(ocurrence.category.icon)}
 				eventHandlers={{
 					click: () =>
 						document

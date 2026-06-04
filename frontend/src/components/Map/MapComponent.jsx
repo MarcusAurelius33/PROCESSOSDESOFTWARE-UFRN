@@ -1,4 +1,4 @@
-import { MapContainer, Marker, TileLayer, ZoomControl } from "react-leaflet";
+import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { OcurrencePin } from "@/components/Ocurrences/OcurrencePin";
 import { UserLocationMarker } from "./UserLocationMarker";

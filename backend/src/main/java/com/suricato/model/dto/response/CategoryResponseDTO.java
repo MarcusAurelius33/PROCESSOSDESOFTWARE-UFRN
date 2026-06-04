@@ -5,6 +5,7 @@ import com.suricato.entity.Category;
 public record CategoryResponseDTO(
     Long id,
     String name,
+    String icon,
     String description
 ) {
     public static CategoryResponseDTO fromEntity(Category category) {
@@ -14,6 +15,7 @@ public record CategoryResponseDTO(
         return new CategoryResponseDTO(
             category.getId(),
             category.getName(),
+            category.getIcon(),
             category.getDescription()
         );
     }
