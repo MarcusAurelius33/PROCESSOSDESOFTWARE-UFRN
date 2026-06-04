@@ -10,4 +10,9 @@ export class OcurrenceService {
 		const response = await api.post("/ocurrences", ocurrenceData);
 		return response.data;
 	}
+
+	static async fetchOcurrences() {
+		const response = await api.get("/ocurrences");
+		return response.data;
+	}
 }

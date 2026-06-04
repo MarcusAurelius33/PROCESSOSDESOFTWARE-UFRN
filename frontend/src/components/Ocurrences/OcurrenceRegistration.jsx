@@ -1,6 +1,5 @@
 import { useCategories } from "@/hooks/useCategories";
 import { useUserPosition } from "@/hooks/useUserPosition";
-import { OcurrenceService } from "@/services/OcurrenceService";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { XIcon, EditIcon } from "lucide-react";
@@ -13,17 +12,21 @@ async function reverseLocation(position) {
 	return response.data;
 }
 
-export const OcurrenceRegistration = () => {
+export const OcurrenceRegistration = ({
+	isEditing = false,
+	ocurrenceData = {},
+	onSubmit,
+}) => {
 	const [formData, setFormData] = useState({
-		title: "",
-		description: "",
-		categoryId: null,
-		address: "",
-		latitude: 0.0,
-		longitude: 0.0,
-		city: "",
-		state: "",
-		country: "",
+		title: ocurrenceData.title || "",
+		description: ocurrenceData.description || "",
+		categoryId: ocurrenceData.categoryId || "",
+		address: ocurrenceData.address || "",
+		latitude: ocurrenceData.latitude || 0.0,
+		longitude: ocurrenceData.longitude || 0.0,
+		city: ocurrenceData?.city?.name || "",
+		state: ocurrenceData?.city?.state || "",
+		country: ocurrenceData?.city?.country || "",
 	});
 	const position = useUserPosition();
 	const { data: categories = [], isLoading: loadingCategories } =
@@ -47,8 +50,7 @@ export const OcurrenceRegistration = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const response = await OcurrenceService.createOcurrence(formData);
-		console.log(response);
+		onSubmit(formData);
 	};
 
 	function handleFormChange(field, value) {
@@ -62,7 +64,9 @@ export const OcurrenceRegistration = () => {
 		<dialog id={`ocurrence-modal-registration`} className="modal modal-middle">
 			<div className="modal-box container max-w-5xl text-base">
 				<div className="w-full flex items-center justify-between mb-6">
-					<h1 className="font-bold text-xl">Cadastrar nova ocorrência</h1>
+					<h1 className="font-bold text-xl">
+						{isEditing ? "Editar ocorrência" : "Cadastrar nova ocorrência"}
+					</h1>
 					<form method="dialog">
 						<button className="btn btn-sm btn-circle btn-ghost">
 							<XIcon />
@@ -94,6 +98,7 @@ export const OcurrenceRegistration = () => {
 							</label>
 							<input
 								onChange={(e) => handleFormChange("title", e.target.value)}
+								value={formData.title}
 								type="text"
 								placeholder="Título da ocorrência"
 								className="w-full input input-md"
@@ -108,6 +113,7 @@ export const OcurrenceRegistration = () => {
 							</label>
 							<select
 								onChange={(e) => handleFormChange("categoryId", e.target.value)}
+								value={formData.categoryId}
 								className="w-full select"
 								id="ocurrence-category"
 								required
@@ -129,11 +135,18 @@ export const OcurrenceRegistration = () => {
 						</label>
 						<textarea
 							onChange={(e) => handleFormChange("description", e.target.value)}
+							value={formData.description}
 							placeholder="Descrição da ocorrência"
 							className="w-full textarea textarea-md resize-none"
 							rows={5}
 							id="ocurrence-description"
 						></textarea>
+					</div>
+
+					<div className="w-full flex flex-col">
+						<label className="fieldset-legend">Adicionar imagens</label>
+						<input type="file" className="file-input w-full" accept="image/*" />
+						<label className="label text-sm mt-2">Max size 5MB</label>
 					</div>
 
 					<button

@@ -95,7 +95,7 @@ export const OcurrrenceDetail = ({ ocurrence }) => {
 								Reportado por:
 								<br />
 							</span>
-							{ocurrence.user.name}
+							{ocurrence.author}
 						</p>
 
 						<p className="text-base">
