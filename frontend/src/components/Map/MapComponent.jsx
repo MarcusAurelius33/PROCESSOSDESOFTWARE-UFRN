@@ -4,17 +4,15 @@ import { OcurrencePin } from "@/components/Ocurrences/OcurrencePin";
 import { UserLocationMarker } from "./UserLocationMarker";
 import { OcurrenceRegistration } from "../Ocurrences/OcurrenceRegistration";
 import { useOcurrences } from "@/hooks/useOcurrences";
-import { useState } from "react";
 
 export const MapComponent = () => {
 	const { ocurrences, ocurrenceLoading, ocurrenceCreator } = useOcurrences();
-	const [isEditingOcurrence, setIsEditingOcurrence] = useState(false);
 
 	const handleSubmitOcurrence = (formData) => {
 		ocurrenceCreator.createOcurrence(formData);
 
 		if (ocurrenceCreator.isSuccess) {
-			setIsEditingOcurrence(true);
+			alert("Ocorrência criada com sucesso!");
 		}
 	};
 
@@ -33,10 +31,7 @@ export const MapComponent = () => {
 						<OcurrencePin key={ocurrence.id} ocurrence={ocurrence} />
 					))}
 
-				<OcurrenceRegistration
-					onSubmit={handleSubmitOcurrence}
-					isEditing={isEditingOcurrence}
-				/>
+				<OcurrenceRegistration onSubmit={handleSubmitOcurrence} />
 
 				<TileLayer
 					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

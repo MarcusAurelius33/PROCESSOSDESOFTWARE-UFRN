@@ -19,7 +19,9 @@ import com.suricato.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -33,6 +35,7 @@ public class OcurrenceService {
 	private final CategoryRepository categoryRepository;
 	private final CityRepository cityRepository;
 	private final UserRepository userRepository;
+	private final OcurrencePhotoService photoService;
 
 	@Transactional(readOnly = true)
 	public List<OcurrenceResponseDTO> findAll() {
@@ -43,7 +46,7 @@ public class OcurrenceService {
 	}
 
 	@Transactional
-	public OcurrenceResponseDTO create(OcurrenceRequestDTO request) {
+	public OcurrenceResponseDTO create(OcurrenceRequestDTO request, MultipartFile photo) throws IOException {
 		Category category = categoryRepository.findByIdAndActiveTrue(request.categoryId())
 				.orElseThrow(() -> new ResourceNotFoundException("Categoria nao encontrada."));
 
@@ -67,6 +70,7 @@ public class OcurrenceService {
 				.build();   
 
 		Ocurrence savedOcurrence = ocurrenceRepository.save(ocurrence);
+		photoService.upload(savedOcurrence, photo);
 		
 		statusHistoryRepository.save(StatusHistory.builder()
 				.currentStatus(OcurrenceStatusEnum.OPEN)

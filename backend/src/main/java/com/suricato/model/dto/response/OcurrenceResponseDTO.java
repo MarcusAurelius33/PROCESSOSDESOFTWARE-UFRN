@@ -17,7 +17,8 @@ public record OcurrenceResponseDTO(
     CityResponseDTO city,
     String author,
     String photoUrl,
-    LocalDateTime createdAt
+    LocalDateTime createdAt,
+    Long totalConfirmation
 ) {
     public static OcurrenceResponseDTO fromEntity(Ocurrence ocurrence) {
         if (ocurrence == null) {
@@ -40,7 +41,8 @@ public record OcurrenceResponseDTO(
             CityResponseDTO.fromEntity(ocurrence.getCity()),
             ocurrence.getUser().getName(),
             photoUrl,
-            ocurrence.getCreatedAt()
+            ocurrence.getCreatedAt(),
+            ocurrence.getTotalConfirmation()
         );
     }
 }

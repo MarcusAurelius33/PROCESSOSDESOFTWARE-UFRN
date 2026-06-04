@@ -14,19 +14,21 @@ async function reverseLocation(position) {
 
 export const OcurrenceRegistration = ({
 	isEditing = false,
-	ocurrenceData = {},
+	initialData = {},
 	onSubmit,
 }) => {
 	const [formData, setFormData] = useState({
-		title: ocurrenceData.title || "",
-		description: ocurrenceData.description || "",
-		categoryId: ocurrenceData.categoryId || "",
-		address: ocurrenceData.address || "",
-		latitude: ocurrenceData.latitude || 0.0,
-		longitude: ocurrenceData.longitude || 0.0,
-		city: ocurrenceData?.city?.name || "",
-		state: ocurrenceData?.city?.state || "",
-		country: ocurrenceData?.city?.country || "",
+		id: initialData.id || 0,
+		title: initialData.title || "",
+		description: initialData.description || "",
+		categoryId: initialData.categoryId || "",
+		address: initialData.address || "",
+		latitude: initialData.latitude || 0.0,
+		longitude: initialData.longitude || 0.0,
+		city: initialData?.city?.name || "",
+		state: initialData?.city?.state || "",
+		country: initialData?.city?.country || "",
+		photo: null,
 	});
 	const position = useUserPosition();
 	const { data: categories = [], isLoading: loadingCategories } =
@@ -50,7 +52,31 @@ export const OcurrenceRegistration = ({
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		onSubmit(formData);
+
+		const payload = new FormData();
+
+		Object.entries(formData).forEach(([key, value]) => {
+			if (value !== null && value !== undefined) {
+				payload.append(key, value);
+			}
+		});
+
+		onSubmit(payload);
+
+		setFormData({
+			title: "",
+			description: "",
+			categoryId: "",
+			address: "",
+			latitude: 0.0,
+			longitude: 0.0,
+			city: "",
+			state: "",
+			country: "",
+			photo: null,
+		});
+
+		document.getElementById(`ocurrence-modal-registration`).closeModal();
 	};
 
 	function handleFormChange(field, value) {
@@ -145,8 +171,14 @@ export const OcurrenceRegistration = ({
 
 					<div className="w-full flex flex-col">
 						<label className="fieldset-legend">Adicionar imagens</label>
-						<input type="file" className="file-input w-full" accept="image/*" />
-						<label className="label text-sm mt-2">Max size 5MB</label>
+						<input
+							type="file"
+							className="file-input w-full"
+							accept="image/*"
+							onChange={(e) => handleFormChange("photo", e.target.files[0])}
+							required
+						/>
+						<span className="label text-sm mt-2">Max size 10MB</span>
 					</div>
 
 					<button
