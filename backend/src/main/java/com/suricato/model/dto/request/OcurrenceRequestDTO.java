@@ -17,8 +17,11 @@ public record OcurrenceRequestDTO(
     @NotNull
     Long categoryId,
     @NotNull
-    Long cityId,
-    String photoUrl
+    String city,
+    @NotNull
+    String state,
+    @NotNull
+    String country
 ) {
 }
 

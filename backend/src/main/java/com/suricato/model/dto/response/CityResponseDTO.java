@@ -5,7 +5,8 @@ import com.suricato.entity.City;
 public record CityResponseDTO(
     Long id,
     String name,
-    String state
+    String state,
+    String country
 ) {
        public static CityResponseDTO fromEntity(City city) {
         if (city == null) {
@@ -14,7 +15,8 @@ public record CityResponseDTO(
         return new CityResponseDTO(
             city.getId(),
             city.getName(),
-            city.getState()
+            city.getState(),
+            city.getCountry()
         );
     }
 }

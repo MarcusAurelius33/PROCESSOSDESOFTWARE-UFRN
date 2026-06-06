@@ -20,6 +20,9 @@ public class City {
     @Column(nullable = false, length = 50)
     private String state;
 
+    @Column(nullable = false, length = 50)
+    private String country;
+
     @Column(precision = 10, scale = 7)
     private BigDecimal latitude;
 

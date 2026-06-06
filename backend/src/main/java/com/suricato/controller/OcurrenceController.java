@@ -8,6 +8,7 @@ import com.suricato.service.OcurrenceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,35 +21,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OcurrenceController {
 
-    private final OcurrenceService ocurrenceService;
-    private final OcurrencePhotoService photoService;
+	private final OcurrenceService ocurrenceService;
+	private final OcurrencePhotoService photoService;
 
-    @GetMapping
-    public List<OcurrenceResponseDTO> findAll() {
-        return ocurrenceService.findAll();
-    }
+	@GetMapping
+	public List<OcurrenceResponseDTO> findAll() {
+		return ocurrenceService.findAll();
+	}
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public OcurrenceResponseDTO create(@Valid @RequestBody OcurrenceRequestDTO request) {
-        return ocurrenceService.create(request);
-    }
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<OcurrenceResponseDTO> create(
+		@Valid @ModelAttribute OcurrenceRequestDTO request,
+		@RequestParam(value = "photo", required = false) MultipartFile photo
+	) throws IOException {
+		return ResponseEntity.ok(ocurrenceService.create(request, photo));
+	}
 
-    @PostMapping("/{id}/photos")
-    public ResponseEntity<OcurrencePhotoResponseDTO> uploadPhoto(
-                                                                   @PathVariable Long id,
-                                                                   @RequestParam("file") MultipartFile file) throws IOException {
+	@PostMapping("/{id}/photos")
+	public ResponseEntity<OcurrencePhotoResponseDTO> uploadPhoto(
+		@PathVariable Long id,
+		@RequestParam("file") MultipartFile file
+	) throws IOException {
+		if (file.isEmpty()) {
+			return ResponseEntity.badRequest().build();
+		}
 
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
+		String contentType = file.getContentType();
+		if (contentType == null || !contentType.startsWith("image/")) {
+			return ResponseEntity.badRequest().build();
+		}
 
-        String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        var photo = photoService.upload(id, file);
-        return ResponseEntity.ok(OcurrencePhotoResponseDTO.from(photo));
-    }
+		return ResponseEntity.ok(photoService.upload(id, file));
+	}
 }

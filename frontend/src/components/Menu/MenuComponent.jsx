@@ -1,6 +1,7 @@
 import {
 	ChartPieIcon,
 	LogOutIcon,
+	MapIcon,
 	MenuIcon,
 	MessageSquareWarningIcon,
 	PlusCircleIcon,
@@ -27,7 +28,7 @@ export const MenuComponent = () => {
 				></label>
 				<div className="menu min-h-full bg-gray-50 w-80 p-0">
 					<div className="bg-cyan-800 p-6 flex items-center gap-6">
-						<img src="logo.svg" alt="Suricato logo" className="w-16 h-16" />
+						<img src="/logo.svg" alt="Suricato logo" className="w-16 h-16" />
 						<div className="text-gray-50">
 							<h1 className="font-bold text-xl">Suricato</h1>
 							<p className="text-sm">
@@ -41,9 +42,22 @@ export const MenuComponent = () => {
 								to="/"
 								className="delay-200 hover:bg-gray-200 rounded-sm p-4 focus-visible:bg-gray-200 focus-visible:text-gray-800"
 							>
+								<MapIcon className="text-gray-800" size={18} />
+								Mapa
+							</Link>
+						</li>
+						<li>
+							<button
+								className="delay-200 hover:bg-gray-200 rounded-sm p-4 focus-visible:bg-gray-200 focus-visible:text-gray-800"
+								onClick={() =>
+									document
+										.getElementById(`ocurrence-modal-registration`)
+										.showModal()
+								}
+							>
 								<PlusCircleIcon className="text-gray-800" size={18} />
 								Nova ocorrência
-							</Link>
+							</button>
 						</li>
 						<li>
 							<Link

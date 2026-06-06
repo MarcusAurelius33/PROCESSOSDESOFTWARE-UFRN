@@ -28,7 +28,7 @@ function createIcon(category) {
 	return L.icon({
 		iconUrl,
 		iconSize: [40, 40],
-		iconAnchor: [20, 40],
+		iconAnchor: [24, 48],
 		popupAnchor: [0, -40],
 	});
 }
@@ -38,7 +38,7 @@ export function OcurrencePin({ ocurrence }) {
 		<>
 			<Marker
 				position={[ocurrence.latitude, ocurrence.longitude]}
-				icon={createIcon(ocurrence.category.name)}
+				icon={createIcon(ocurrence.category.icon)}
 				eventHandlers={{
 					click: () =>
 						document

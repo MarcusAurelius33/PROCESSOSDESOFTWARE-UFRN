@@ -19,5 +19,8 @@ public class Category {
     private String description;
 
     @Column(nullable = false)
+    private String icon;
+
+    @Column(nullable = false)
     private boolean active;
 }

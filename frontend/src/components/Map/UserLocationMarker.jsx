@@ -1,10 +1,9 @@
 import { UserPin } from "@/assets/markers";
-import { useEffect, useState } from "react";
-import { Marker, useMapEvents } from "react-leaflet";
+import { Marker } from "react-leaflet";
 import L from "leaflet";
+import { useUserPosition } from "@/hooks/useUserPosition";
 
 export const UserLocationMarker = () => {
-	const [position, setPosition] = useState(null);
 	const userIcon = L.icon({
 		iconUrl: UserPin,
 		iconSize: [56, 56],
@@ -12,16 +11,7 @@ export const UserLocationMarker = () => {
 		popupAnchor: [0, -40],
 	});
 
-	const map = useMapEvents({
-		locationfound(e) {
-			setPosition(e.latlng);
-			map.flyTo(e.latlng, 18);
-		},
-	});
-
-	useEffect(() => {
-		map.locate();
-	}, [map]);
+	const position = useUserPosition();
 
 	return position === null ? null : (
 		<Marker position={position} icon={userIcon} />
