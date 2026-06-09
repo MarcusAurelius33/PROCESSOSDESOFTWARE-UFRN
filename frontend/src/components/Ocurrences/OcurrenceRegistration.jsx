@@ -30,6 +30,7 @@ export const OcurrenceRegistration = ({
 		country: initialData?.city?.country || "",
 		photo: null,
 	});
+	
 	const position = useUserPosition();
 	const { data: categories = [], isLoading: loadingCategories } =
 		useCategories();
@@ -37,13 +38,16 @@ export const OcurrenceRegistration = ({
 	const { data: reverseLocationData } = useQuery({
 		queryKey: ["reverseLocation"],
 		queryFn: () => reverseLocation(position),
+		enabled: !!position
 	});
 
 	useEffect(() => {
 		if (reverseLocationData) {
 			handleFormChange("address", reverseLocationData.display_name);
-			handleFormChange("latitude", position.lat);
-			handleFormChange("longitude", position.lng);
+			if(position){
+				handleFormChange("latitude", position.lat);
+				handleFormChange("longitude", position.lng);
+			}
 			handleFormChange("city", reverseLocationData.address.city || "");
 			handleFormChange("state", reverseLocationData.address.state || "");
 			handleFormChange("country", reverseLocationData.address.country || "");

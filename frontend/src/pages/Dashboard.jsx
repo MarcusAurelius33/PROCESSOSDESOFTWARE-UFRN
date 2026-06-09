@@ -18,8 +18,8 @@ export function DashboardPage() {
         const headers = { Authorization: `Bearer ${token}` };
 
         Promise.all([
-            fetch("/api/dashboard/stats", { headers }).then((r) => r.json()),
-            fetch("/ocurrences", { headers }).then((r) => r.json()),
+            fetch("http://localhost:8080/api/dashboard/stats", { headers }).then((r) => r.json()),
+            fetch("http://localhost:8080/ocurrences", { headers }).then((r) => r.json()),
         ])
             .then(([statsData, ocurrencesData]) => {
                 setStats(statsData);
@@ -33,11 +33,8 @@ export function DashboardPage() {
                 setOcurrences(Object.values(grouped));
                 setLoading(false);
             })
-            .catch((error) => {
-                logout();
-                navigate("/");
-            });
-    }, [navigate]);
+            .catch(() => setLoading(false));
+    }, []);
 
     function handleLogout() {
         logout();
@@ -50,12 +47,6 @@ export function DashboardPage() {
         </div>
     );
 
-    // === MUDANÇA AQUI ===
-    // Como o .catch() acima já redireciona para fora da página, 
-    // se o React tentar renderizar algo nesse meio segundo antes de sair,
-    // retornamos apenas null (uma tela vazia) para não quebrar a aplicação.
-    if (!stats) return null;
-
     const statusData = [
         { name: "Abertas", value: stats.open },
         { name: "Em andamento", value: stats.inProgress },
@@ -63,10 +54,10 @@ export function DashboardPage() {
         { name: "Fechadas", value: stats.closed },
     ];
 
-    const categoryData = stats?.byCategory?.map((c) => ({ name: c.category, total: c.total })) || [];
+    const categoryData = stats.byCategory.map((c) => ({ name: c.category, total: c.total }));
 
     return (
-        <div className="min-h-screen bg-gray-50 p-8 pt-20">
+        <div className="min-h-screen bg-gray-50 p-8">
             <div className="max-w-6xl mx-auto">
 
                 <div className="flex justify-end mb-4">
