@@ -1,7 +1,8 @@
 import { OcurrenceService } from "@/services/OcurrenceService";
-import { useMutation, useQuery } from "@tanstack/react-query";
-
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"; 
 export const useOcurrences = () => {
+	const queryClient = useQueryClient(); 
+
 	const {
 		data: ocurrences = [],
 		isLoading: ocurrenceLoading,
@@ -19,12 +20,23 @@ export const useOcurrences = () => {
 		},
 	});
 
+	const { mutate: confirmOcurrence, isPending: isConfirming } = useMutation({
+		mutationFn: OcurrenceService.confirmOcurrence,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["ocurrences"] });
+		},
+	});
+
 	return {
 		ocurrences,
 		ocurrenceLoading,
 		ocurrenceCreator: {
 			createOcurrence,
 			isSuccess,
+		},
+		ocurrenceConfirmer: {
+			confirmOcurrence,
+			isConfirming,
 		},
 	};
 };

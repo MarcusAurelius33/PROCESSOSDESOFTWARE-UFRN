@@ -101,6 +101,6 @@ true,
 'teste2@suricato.local', 
 '$2a$10$X/r9xT/A9hA/.g3Z4n/uI.oA.yK.UuG.H1G.N.mH.T.yH.C.rA.yK', '
 84999999992', 
-'CITIZEN', t
-rue, 
-1);
+'CITIZEN', 
+true, 
+1); 

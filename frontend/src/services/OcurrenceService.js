@@ -15,4 +15,14 @@ export class OcurrenceService {
 		const response = await api.get("/ocurrences");
 		return response.data;
 	}
+
+	// NOVO MÉTODO
+	static async confirmOcurrence({ id, userEmail }) {
+		const response = await api.post(`/ocurrences/${id}/confirmations`, null, {
+			headers: {
+				"X-Mock-User-Email": userEmail,
+			},
+		});
+		return response.data;
+	}
 }
