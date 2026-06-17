@@ -6,7 +6,8 @@ import {
 	MessageSquareWarningIcon,
 	PlusCircleIcon,
 } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "@/services/authService";
 
 export const MenuComponent = () => {
 	return (
@@ -70,7 +71,7 @@ export const MenuComponent = () => {
 						</li>
 						<li className="hidden md:block">
 							<Link
-								to="/"
+								to="/dashboard"
 								className="delay-200 hover:bg-gray-200 rounded-sm p-4 focus-visible:bg-gray-200 focus-visible:text-gray-800"
 							>
 								<ChartPieIcon className="text-gray-800" size={18} />
