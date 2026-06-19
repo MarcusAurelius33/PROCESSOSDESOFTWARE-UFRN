@@ -1,7 +1,8 @@
 import { OcurrenceService } from "@/services/OcurrenceService";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"; 
-export const useOcurrences = () => {
-	const queryClient = useQueryClient(); 
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+export const useOcurrences = (userEmail = "teste1@suricato.local") => {
+	const queryClient = useQueryClient();
 
 	const {
 		data: ocurrences = [],
@@ -10,6 +11,12 @@ export const useOcurrences = () => {
 	} = useQuery({
 		queryKey: ["ocurrences"],
 		queryFn: OcurrenceService.fetchOcurrences,
+		staleTime: 5 * 60 * 1000,
+	});
+
+	const { data: myConfirmations = [], isLoading: confirmationsLoading } = useQuery({
+		queryKey: ["myConfirmations", userEmail],
+		queryFn: () => OcurrenceService.fetchMyConfirmations(userEmail),
 		staleTime: 5 * 60 * 1000,
 	});
 
@@ -24,12 +31,14 @@ export const useOcurrences = () => {
 		mutationFn: OcurrenceService.confirmOcurrence,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["ocurrences"] });
+			queryClient.invalidateQueries({ queryKey: ["myConfirmations", userEmail] });
 		},
 	});
 
 	return {
 		ocurrences,
-		ocurrenceLoading,
+		myConfirmations, 
+		ocurrenceLoading: ocurrenceLoading || confirmationsLoading,
 		ocurrenceCreator: {
 			createOcurrence,
 			isSuccess,

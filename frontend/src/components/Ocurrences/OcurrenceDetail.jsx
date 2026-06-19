@@ -1,23 +1,18 @@
 import { XIcon, CheckCircle, AlertTriangle } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useOcurrences } from "@/hooks/useOcurrences";
 
 export const OcurrrenceDetail = ({ ocurrence }) => {
-	const { ocurrenceConfirmer } = useOcurrences();
+	const mockEmail = "teste2@suricato.local";
+	
+	const { myConfirmations = [], ocurrenceConfirmer } = useOcurrences(mockEmail);
 	const { confirmOcurrence, isConfirming } = ocurrenceConfirmer;
 	
-	const [hasConfirmed, setHasConfirmed] = useState(false);
 	const [feedback, setFeedback] = useState({ type: null, message: "" });
 
-	useEffect(() => {
-		const confirmedState = localStorage.getItem(`confirmed_${ocurrence.id}`);
-		if (confirmedState === "true") {
-			setHasConfirmed(true);
-		}
-	}, [ocurrence.id]);
+	const hasConfirmed = myConfirmations.includes(ocurrence.id);
 
 	const triggerFeedbackModal = (type, message) => {
-		
 		document.getElementById(`ocurrence-modal-${ocurrence.id}`).close();
 		
 		setFeedback({ type, message });
@@ -33,14 +28,10 @@ export const OcurrrenceDetail = ({ ocurrence }) => {
 	};
 
 	const handleConfirm = () => {
-		const userEmail = "teste1@suricato.local";
-
 		confirmOcurrence(
-			{ id: ocurrence.id, userEmail },
+			{ id: ocurrence.id, userEmail: mockEmail },
 			{
 				onSuccess: () => {
-					localStorage.setItem(`confirmed_${ocurrence.id}`, "true");
-					setHasConfirmed(true);
 					triggerFeedbackModal(
 						"success", 
 						"Apoio registrado! Aumentamos a visibilidade deste problema para a gestão municipal."

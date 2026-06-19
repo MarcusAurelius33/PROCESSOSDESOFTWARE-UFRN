@@ -60,4 +60,11 @@ public class OcurrenceController {
 
 		return ResponseEntity.ok(ocurrenceService.confirmOcurrence(id, userEmail));
 	}
+
+	@GetMapping("/my-confirmations")
+	public ResponseEntity<List<Long>> getMyConfirmations(
+        @RequestHeader(value = "X-Mock-User-Email", defaultValue = "cidadao.seed@suricato.local") String userEmail) {
+    		List<Long> confirmedIds = ocurrenceService.findMyConfirmations(userEmail);
+    		return ResponseEntity.ok(confirmedIds);
+}
 }

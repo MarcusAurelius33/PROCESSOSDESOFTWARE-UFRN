@@ -133,4 +133,9 @@ public class OcurrenceService {
 
 		return OcurrenceResponseDTO.fromEntity(savedOcurrence);
 	}
+
+	@Transactional(readOnly = true)
+	public List<Long> findMyConfirmations(String userEmail) {
+    	return confirmationRepository.findConfirmedOcurrenceIdsByUserEmail(userEmail);
+	}
 }
