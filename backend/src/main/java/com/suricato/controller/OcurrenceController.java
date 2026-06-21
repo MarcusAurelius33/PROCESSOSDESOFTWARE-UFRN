@@ -32,17 +32,15 @@ public class OcurrenceController {
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<OcurrenceResponseDTO> create(
-		@Valid @ModelAttribute OcurrenceRequestDTO request,
-		@RequestParam(value = "photo", required = false) MultipartFile photo
-	) throws IOException {
+			@Valid @ModelAttribute OcurrenceRequestDTO request,
+			@RequestParam(value = "photo", required = false) MultipartFile photo) throws IOException {
 		return ResponseEntity.ok(ocurrenceService.create(request, photo));
 	}
 
 	@PostMapping("/{id}/photos")
 	public ResponseEntity<OcurrencePhotoResponseDTO> uploadPhoto(
-		@PathVariable Long id,
-		@RequestParam("file") MultipartFile file
-	) throws IOException {
+			@PathVariable Long id,
+			@RequestParam("file") MultipartFile file) throws IOException {
 		if (file.isEmpty()) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -54,4 +52,19 @@ public class OcurrenceController {
 
 		return ResponseEntity.ok(photoService.upload(id, file));
 	}
+
+	@PostMapping("/{id}/confirmations")
+	public ResponseEntity<OcurrenceResponseDTO> confirm(
+			@PathVariable Long id,
+			@RequestHeader(value = "X-Mock-User-Email", defaultValue = "cidadao.seed@suricato.local") String userEmail) {
+
+		return ResponseEntity.ok(ocurrenceService.confirmOcurrence(id, userEmail));
+	}
+
+	@GetMapping("/my-confirmations")
+	public ResponseEntity<List<Long>> getMyConfirmations(
+        @RequestHeader(value = "X-Mock-User-Email", defaultValue = "cidadao.seed@suricato.local") String userEmail) {
+    		List<Long> confirmedIds = ocurrenceService.findMyConfirmations(userEmail);
+    		return ResponseEntity.ok(confirmedIds);
+}
 }

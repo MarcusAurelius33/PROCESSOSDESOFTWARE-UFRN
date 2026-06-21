@@ -2,10 +2,12 @@ package com.suricato.service;
 
 import com.suricato.entity.Category;
 import com.suricato.entity.City;
+import com.suricato.entity.Confirmation;
 import com.suricato.entity.Ocurrence;
 import com.suricato.entity.StatusHistory;
 import com.suricato.entity.User;
 import com.suricato.enums.OcurrenceStatusEnum;
+import com.suricato.exception.BusinessRuleException;
 import com.suricato.exception.ResourceNotFoundException;
 import com.suricato.model.dto.request.OcurrenceRequestDTO;
 import com.suricato.model.dto.response.CategoryResponseDTO;
@@ -13,6 +15,7 @@ import com.suricato.model.dto.response.CityResponseDTO;
 import com.suricato.model.dto.response.OcurrenceResponseDTO;
 import com.suricato.repository.CategoryRepository;
 import com.suricato.repository.CityRepository;
+import com.suricato.repository.ConfirmationRepository;
 import com.suricato.repository.OcurrenceRepository;
 import com.suricato.repository.StatusHistoryRepository;
 import com.suricato.repository.UserRepository;
@@ -36,13 +39,14 @@ public class OcurrenceService {
 	private final CityRepository cityRepository;
 	private final UserRepository userRepository;
 	private final OcurrencePhotoService photoService;
+	private final ConfirmationRepository confirmationRepository;
 
 	@Transactional(readOnly = true)
 	public List<OcurrenceResponseDTO> findAll() {
 		return ocurrenceRepository.findAll()
-			.stream()
-			.map(OcurrenceResponseDTO::fromEntity)
-			.toList();
+				.stream()
+				.map(OcurrenceResponseDTO::fromEntity)
+				.toList();
 	}
 
 	@Transactional
@@ -50,7 +54,9 @@ public class OcurrenceService {
 		Category category = categoryRepository.findByIdAndActiveTrue(request.categoryId())
 				.orElseThrow(() -> new ResourceNotFoundException("Categoria nao encontrada."));
 
-		City city = cityRepository.findFirstByNameIgnoreCaseAndStateIgnoreCaseAndCountryIgnoreCase(request.city(), request.state(), request.country())
+		City city = cityRepository
+				.findFirstByNameIgnoreCaseAndStateIgnoreCaseAndCountryIgnoreCase(request.city(), request.state(),
+						request.country())
 				.orElseGet(() -> createCity(request.city(), request.state(), request.country()));
 
 		User user = userRepository.findByEmail(SEED_USER_EMAIL)
@@ -67,11 +73,11 @@ public class OcurrenceService {
 				.user(user)
 				.category(category)
 				.city(city)
-				.build();   
+				.build();
 
 		Ocurrence savedOcurrence = ocurrenceRepository.save(ocurrence);
 		photoService.upload(savedOcurrence, photo);
-		
+
 		statusHistoryRepository.save(StatusHistory.builder()
 				.currentStatus(OcurrenceStatusEnum.OPEN)
 				.prevStatus(null)
@@ -80,27 +86,56 @@ public class OcurrenceService {
 
 		return OcurrenceResponseDTO.fromEntity(savedOcurrence);
 	}
-	
+
 	public List<CategoryResponseDTO> findAllActive() {
 		return categoryRepository.findByActiveTrue()
-			.stream()
-			.map(CategoryResponseDTO::fromEntity) 
-			.toList();
+				.stream()
+				.map(CategoryResponseDTO::fromEntity)
+				.toList();
 	}
 
 	public List<CityResponseDTO> findCity() {
 		return cityRepository.findAll()
-			.stream()
-			.map(CityResponseDTO::fromEntity)
-			.toList();
+				.stream()
+				.map(CityResponseDTO::fromEntity)
+				.toList();
 	}
 
 	private City createCity(String cityName, String state, String country) {
 		City city = City.builder()
-			.name(cityName)
-			.state(state)
-			.country(country)
-			.build();
+				.name(cityName)
+				.state(state)
+				.country(country)
+				.build();
 		return cityRepository.save(city);
+	}
+
+	@Transactional
+	public OcurrenceResponseDTO confirmOcurrence(Long ocurrenceId, String userEmail) {
+		Ocurrence ocurrence = ocurrenceRepository.findById(ocurrenceId)
+				.orElseThrow(() -> new ResourceNotFoundException("Ocorrência não encontrada."));
+
+		User actingUser = userRepository.findByEmail(userEmail)
+				.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+
+		if (confirmationRepository.existsByUserIdAndOcurrenceId(actingUser.getId(), ocurrence.getId())) {
+			throw new BusinessRuleException("Usuário já confirmou esta ocorrência.");
+		}
+
+		Confirmation confirmation = Confirmation.builder()
+				.ocurrence(ocurrence)
+				.user(actingUser)
+				.build();
+		confirmationRepository.save(confirmation);
+
+		ocurrence.setTotalConfirmation(ocurrence.getTotalConfirmation() + 1);
+		Ocurrence savedOcurrence = ocurrenceRepository.save(ocurrence);
+
+		return OcurrenceResponseDTO.fromEntity(savedOcurrence);
+	}
+
+	@Transactional(readOnly = true)
+	public List<Long> findMyConfirmations(String userEmail) {
+    	return confirmationRepository.findConfirmedOcurrenceIdsByUserEmail(userEmail);
 	}
 }

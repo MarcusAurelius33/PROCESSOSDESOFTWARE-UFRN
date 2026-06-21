@@ -88,3 +88,19 @@ VALUES (
     true,
     1
 );
+-- Usuários para testes de confirmação de ocorrências da equipe
+INSERT INTO users (name, email, password, phone, role, active, city_id) VALUES
+('Usuário Teste 1', 
+'teste1@suricato.local', 
+'$2a$10$X/r9xT/A9hA/.g3Z4n/uI.oA.yK.UuG.H1G.N.mH.T.yH.C.rA.yK', 
+'84999999991', 
+'CITIZEN', 
+true, 
+1),
+('Usuário Teste 2', 
+'teste2@suricato.local', 
+'$2a$10$X/r9xT/A9hA/.g3Z4n/uI.oA.yK.UuG.H1G.N.mH.T.yH.C.rA.yK', '
+84999999992', 
+'CITIZEN', 
+true, 
+1); 
